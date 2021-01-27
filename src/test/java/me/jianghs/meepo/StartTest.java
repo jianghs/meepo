@@ -29,16 +29,21 @@ public class StartTest {
     public static void init() {
         log.info("初始化线程数量");
 
-        THREAD_COUNT = 50;
+        THREAD_COUNT = 10;
     }
 
     @DisplayName("继承Thread类")
     @Test
     void test1() {
+        List<Thread> threads = new ArrayList<>();
+        Printer printer = new Printer();
         for (int i = 0; i < THREAD_COUNT; i++) {
             String name = "线程" + i;
-            log.info("========={}创建=========", name);
-            Thread thread = new Printer(name);
+//            log.info("========={}创建=========", name);
+            Thread thread = new Thread(printer, name);
+            threads.add(thread);
+        }
+        for (Thread thread : threads) {
             thread.start();
         }
     }
@@ -46,33 +51,37 @@ public class StartTest {
     @DisplayName("实现Runnable接口")
     @Test
     void test2() {
+        List<Thread> threads = new ArrayList<>();
+        // 多线程实现类只能new一次 特别注意
+        PrinterRunnable printerRunnable = new PrinterRunnable();
         for (int i = 0; i < THREAD_COUNT; i++) {
             String name = "线程" + i;
-            log.info("========={}创建=========", name);
-            Thread printer = new Thread(new PrinterRunnable(), name);
-            printer.start();
+            Thread printer = new Thread(printerRunnable, name);
+            threads.add(printer);
+        }
+        for (Thread thread : threads) {
+            thread.start();
         }
     }
 
     @DisplayName("实现Callable接口")
     @Test
-    void test3() throws ExecutionException, InterruptedException, TimeoutException {
+    void test3() throws ExecutionException, InterruptedException {
         List<FutureTask<Integer>> list = new ArrayList<>();
+        List<Thread> threads = new ArrayList<>();
+        // 多线程实现类只能new一次 特别注意
+        Callable<Integer> printCallable = new PrinterCallable();
         for (int i = 0; i < THREAD_COUNT; i++) {
             String name = "线程" + i;
-            log.info("========={}创建=========", name);
-            Callable<Integer> printCallable = new PrinterCallable();
             FutureTask<Integer> futureTask = new FutureTask<>(printCallable);
             Thread thread = new Thread(futureTask, name);
-            thread.start();
+            threads.add(thread);
             list.add(futureTask);
-            // get 默认会阻塞线程
-//            log.info("{}执行后的返回值：{}", name ,futureTask.get());
-
-            // 如果线程的执行时间超过设置的超时时间，则会异常
-//            log.info("{}执行后的返回值：{}", name ,futureTask.get(100, TimeUnit.MILLISECONDS));
         }
-
+        // 启动线程
+        for (Thread thread : threads) {
+            thread.start();
+        }
         for(FutureTask<Integer> futureTask : list) {
             log.info("执行后的返回值：{}", futureTask.get());
         }
@@ -84,8 +93,9 @@ public class StartTest {
         //使用Executors工具类中的方法创建线程池
         ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
         //为线程池中的线程分配任务,使用submit方法，传入的参数可以是Runnable的实现类，也可以是Callable的实现类
+        // 多线程实现类只能new一次 特别注意
+        PrinterRunnable demo = new PrinterRunnable();
         for(int i = 0; i < THREAD_COUNT; i++){
-            PrinterRunnable demo = new PrinterRunnable();
             pool.submit(demo);
         }
 
@@ -100,11 +110,10 @@ public class StartTest {
     void test5() {
         //使用Executors工具类中的方法创建线程池
         ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
-
-
+        // 多线程实现类只能new一次 特别注意
+        PrinterCallable demo = new PrinterCallable();
         //为线程池中的线程分配任务,使用submit方法，传入的参数可以是Runnable的实现类，也可以是Callable的实现类
         for(int i = 0; i < THREAD_COUNT; i++){
-            PrinterCallable demo = new PrinterCallable();
             FutureTask<Integer> futureTask = new FutureTask<>(demo);
             pool.submit(futureTask);
         }

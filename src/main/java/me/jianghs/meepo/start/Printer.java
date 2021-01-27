@@ -13,12 +13,20 @@ import org.slf4j.LoggerFactory;
 public class Printer extends Thread {
     private static final Logger log = LoggerFactory.getLogger(Printer.class);
 
-    public Printer(String name) {
-        super(name);
-    }
+    private static int count = 0;
+
+//    public Printer(String name) {
+//        super(name);
+//    }
 
     @Override
     public void run() {
-        log.info("{}打印进行中...", this.getName());
+        // 注意类锁和对象锁
+        synchronized (this) {
+            for (int i = 0; i < 5; i++) {
+                log.info("{}的count:{}", Thread.currentThread().getName(), count++);
+            }
+        }
+
     }
 }

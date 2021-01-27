@@ -12,9 +12,13 @@ import org.slf4j.LoggerFactory;
  */
 public class PrinterRunnable implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(PrinterRunnable.class);
-
+    private static int count = 0;
     @Override
     public void run() {
-        log.info("{}打印进行中...", Thread.currentThread().getName());
+        synchronized (this) {
+            for (int i = 0; i < 5; i++) {
+                log.info("{}的count:{}", Thread.currentThread().getName(), count++);
+            }
+        }
     }
 }

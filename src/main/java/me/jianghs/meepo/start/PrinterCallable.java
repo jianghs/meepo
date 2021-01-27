@@ -3,7 +3,6 @@ package me.jianghs.meepo.start;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Random;
 import java.util.concurrent.Callable;
 
 /**
@@ -15,17 +14,17 @@ import java.util.concurrent.Callable;
  */
 public class PrinterCallable implements Callable<Integer> {
     Logger log = LoggerFactory.getLogger(PrinterCallable.class);
-    /**
-     * Computes a result, or throws an exception if unable to do so.
-     *
-     * @return computed result
-     * @throws Exception if unable to compute a result
-     */
+
+    private static int count = 0;
+
     @Override
-    public Integer call() throws Exception {
-        log.info("{}的call方法内部执行", Thread.currentThread().getName());
-        // 随机返回一个数字
-//        Thread.sleep(500);
-        return new Random().nextInt(100);
+    public Integer call() {
+        synchronized (this) {
+            for(int i = 0; i < 5; i++) {
+                log.info("{}的count是：{}", Thread.currentThread().getName(), count ++);
+            }
+        }
+
+        return count;
     }
 }
