@@ -36,6 +36,7 @@ public class StartTest {
     @Test
     void test1() {
         List<Thread> threads = new ArrayList<>();
+        // 使用了对象锁,只能new一次
         Printer printer = new Printer();
         for (int i = 0; i < THREAD_COUNT; i++) {
             String name = "线程" + i;
@@ -52,7 +53,7 @@ public class StartTest {
     @Test
     void test2() {
         List<Thread> threads = new ArrayList<>();
-        // 多线程实现类只能new一次 特别注意
+        // 使用了对象锁,只能new一次
         PrinterRunnable printerRunnable = new PrinterRunnable();
         for (int i = 0; i < THREAD_COUNT; i++) {
             String name = "线程" + i;
@@ -69,7 +70,7 @@ public class StartTest {
     void test3() throws ExecutionException, InterruptedException {
         List<FutureTask<Integer>> list = new ArrayList<>();
         List<Thread> threads = new ArrayList<>();
-        // 多线程实现类只能new一次 特别注意
+        // 使用了对象锁,只能new一次
         Callable<Integer> printCallable = new PrinterCallable();
         for (int i = 0; i < THREAD_COUNT; i++) {
             String name = "线程" + i;
@@ -93,7 +94,7 @@ public class StartTest {
         //使用Executors工具类中的方法创建线程池
         ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
         //为线程池中的线程分配任务,使用submit方法，传入的参数可以是Runnable的实现类，也可以是Callable的实现类
-        // 多线程实现类只能new一次 特别注意
+        // 使用了对象锁,只能new一次
         PrinterRunnable demo = new PrinterRunnable();
         for(int i = 0; i < THREAD_COUNT; i++){
             pool.submit(demo);
@@ -110,7 +111,7 @@ public class StartTest {
     void test5() {
         //使用Executors工具类中的方法创建线程池
         ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
-        // 多线程实现类只能new一次 特别注意
+        // 使用了对象锁,只能new一次
         PrinterCallable demo = new PrinterCallable();
         //为线程池中的线程分配任务,使用submit方法，传入的参数可以是Runnable的实现类，也可以是Callable的实现类
         for(int i = 0; i < THREAD_COUNT; i++){

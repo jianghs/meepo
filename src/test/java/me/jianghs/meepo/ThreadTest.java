@@ -19,13 +19,16 @@ import org.slf4j.LoggerFactory;
 public class ThreadTest {
     private static final Logger log = LoggerFactory.getLogger(ThreadTest.class);
 
-    @DisplayName("继承Thread类")
+    @DisplayName("sleep")
     @Test
-    void test1() {
+    void test1() throws InterruptedException {
         SleepRunner sleepRunner = new SleepRunner();
         Thread thread1 = new Thread(sleepRunner, "线程1");
         Thread thread2 = new Thread(sleepRunner, "线程2");
         thread1.start();
         thread2.start();
+
+        Thread.sleep(20000);
+        log.info("主线程处理结束");
     }
 }

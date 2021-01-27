@@ -11,21 +11,22 @@ import org.slf4j.LoggerFactory;
  * @version: 1.0
  */
 public class SleepRunner implements Runnable {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
-
-
-    public SleepRunner() {
-        count = 0;
-    }
-
-    private static int count;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void run() {
         synchronized (this) {
-            for(int i = 0; i < 5; i++) {
-                logger.info("{}的count是：{}", Thread.currentThread().getName(), count ++);
+            logger.info("{}开始...", Thread.currentThread().getName());
+            try {
+                for (int i = 0; i < 10; i++) {
+                    Thread.sleep(500);
+                    logger.info("{}输出{}", Thread.currentThread().getName(), i);
+                }
+            } catch (InterruptedException e) {
+                logger.error("异常：{}", e);
+                e.printStackTrace();
             }
+            logger.info("{}结束...", Thread.currentThread().getName());
         }
 
     }

@@ -15,10 +15,6 @@ public class Printer extends Thread {
 
     private static int count = 0;
 
-//    public Printer(String name) {
-//        super(name);
-//    }
-
     @Override
     public void run() {
         // 注意类锁和对象锁
