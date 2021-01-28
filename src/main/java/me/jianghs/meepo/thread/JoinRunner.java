@@ -8,16 +8,13 @@ public class JoinRunner implements Runnable {
 
     @Override
     public void run() {
-        synchronized (this) {
-            logger.info("{}开始...", Thread.currentThread().getName());
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                logger.error("异常：{}", e);
-                e.printStackTrace();
-            }
-            logger.info("{}结束...", Thread.currentThread().getName());
+        logger.info("{}开始...", Thread.currentThread().getName());
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            logger.error("异常：{}", e);
+            e.printStackTrace();
         }
-
+        logger.info("{}结束...", Thread.currentThread().getName());
     }
 }
