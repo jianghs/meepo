@@ -25,16 +25,17 @@ public class Producer implements Runnable {
     public void run() {
         while (true) {
             synchronized (list) {
-                if (list.size() > 100) {
-                    try {
+                try {
+                    // 多生产者时，需采用while
+                    while (list.size() == 100) {
                         list.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
+                    list.add(new Object());
+                    logger.info("{}:生产，剩余产品数量{}", Thread.currentThread().getName(), list.size());
+                    list.notifyAll();
+                } catch (InterruptedException e) {
+                    logger.error("生产异常", e);
                 }
-                list.add(new Object());
-                logger.info("{}:生产，剩余产品数量{}", Thread.currentThread().getName(), list.size());
-                list.notifyAll();
             }
         }
     }

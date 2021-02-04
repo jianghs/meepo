@@ -88,26 +88,43 @@ public class WaitAndNotifyTest {
 
     @DisplayName("1生产：1消费")
     @Test
-    void test4() {
+    void test4() throws InterruptedException {
         List<Object> objects = new ArrayList<>();
         Thread producer = new Thread(new Producer(objects));
         Thread consumer = new Thread(new Consumer(objects));
         producer.start();
         consumer.start();
+
+        Thread.sleep(5000);
     }
 
-    @DisplayName("n生产：1消费")
+    @DisplayName("n生产：n消费")
     @Test
     void test5() throws InterruptedException {
         List<Object> objects = new ArrayList<>();
         Thread producer1 = new Thread(new Producer(objects), "生产者1");
         Thread producer2 = new Thread(new Producer(objects), "生产者2");
-        Thread consumer = new Thread(new Consumer(objects), "消费者");
+        Thread consumer1 = new Thread(new Consumer(objects), "消费者1");
+        Thread consumer2 = new Thread(new Consumer(objects), "消费者2");
 
         producer1.start();
         producer2.start();
-        consumer.start();
+        consumer1.start();
+        consumer2.start();
         Thread.sleep(100);
     }
 
+    @DisplayName("三个线程按顺序输出")
+    @Test
+    void test6() throws InterruptedException {
+        List<Object> list = new ArrayList<>();
+        Thread thread1 = new Thread(new Thread1(list), "线程1");
+        Thread thread2 = new Thread(new Thread2(list), "线程2");
+        Thread thread3 = new Thread(new Thread3(list), "线程3");
+
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        Thread.sleep(2000);
+    }
 }

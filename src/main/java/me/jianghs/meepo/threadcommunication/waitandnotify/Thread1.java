@@ -12,11 +12,13 @@ import java.util.List;
  * @createDate: 2021/2/3 14:35
  * @version: 1.0
  */
-public class Consumer implements Runnable {
-    private Logger logger = LoggerFactory.getLogger(Consumer.class);
-    private List<Object> list;
+public class Thread1 implements Runnable {
+    private Logger logger = LoggerFactory.getLogger(Thread1.class);
+//    private volatile int num;
+//    private Object lock;
+    List<Object> list;
 
-    public Consumer(List<Object> list) {
+    public Thread1(List<Object> list) {
         this.list = list;
     }
 
@@ -26,14 +28,14 @@ public class Consumer implements Runnable {
             synchronized (list) {
                 try {
                     // 多消费者时，需采用while
-                    while (list.size() == 0) {
+                    while (list.size() % 3 == 0 || list.size() % 3 == 1) {
                         list.wait();
                     }
-                    list.remove(0);
-                    logger.info("{}:消费，剩余产品数量{}", Thread.currentThread().getName(), list.size());
+                    logger.info("{}运行结果：{}", Thread.currentThread().getName(), "C");
+                    list.add(new Object());
                     list.notifyAll();
                 } catch (InterruptedException e) {
-                    logger.error("消费异常", e);
+                    logger.error("异常", e);
                 }
             }
         }
