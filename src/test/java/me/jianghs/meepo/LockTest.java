@@ -109,4 +109,17 @@ public class LockTest {
         thread4.start();
         Thread.sleep(1000);
     }
+
+    @DisplayName("两个线程交替运行")
+    @Test
+    void test7() throws InterruptedException {
+        Lock lock = new ReentrantLock();
+        Condition condition = lock.newCondition();
+        Thread thread1 = new Thread(new ThreadD(lock, condition, false), "A");
+        Thread thread2 = new Thread(new ThreadE(lock, condition, false), "B");
+
+        thread2.start();
+        thread1.start();
+        Thread.sleep(10000);
+    }
 }
