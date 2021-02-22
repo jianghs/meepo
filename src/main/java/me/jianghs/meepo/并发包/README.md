@@ -40,3 +40,58 @@
 ### Semaphore（信号量）
 
 一个时刻允许多个线程对共享资源进行并行操作。
+
+1. Semaphore的tryAcquire设置为1，实现tryLock。
+1. 许可证的释放必须确保执行了acquire的线程才可以。
+
+### BlockingQueue（阻塞队列）
+
+1. 当队列种的资源满时，对队列写操作的线程阻塞挂起。
+1. 当队列种的资源为0时，对队列读操作的线程阻塞挂起。
+
+#### ArrayBlockingQueue
+
+基于数组结构实现的FIFO阻塞队列。
+
+1. 阻塞式写入put
+1. 指定时间内写入阻塞offer
+1. 非阻塞式写入add
+
+
+1. 阻塞式读take
+1. 指定时间内读取阻塞poll
+1. 非阻塞式读peek
+
+原理：Lock+Condition
+
+#### PriorityBlockingQueue（优先级阻塞队列）
+
+基于数组实现的无边界有序阻塞队列。
+
+根据某种规则，将插入尾部的数据进行排序，所以不遵循FIFO。理论上是无边界的。
+
+初始化指定的参数是指初始容量
+
+原理：Lock+Condition
+
+#### LinkedBockingQueue
+
+可选边界基于链表实现的FIFO队列。
+
+可以在构造函数时指定边界，默认无边界。
+
+#### DelayQueue
+
+无边界阻塞队列。存入队列的数据元素会被延迟单位事件后才被消费。根据优先级排序，根据过期时间排序。
+
+#### SynchronousQueue
+
+每次的写入操作必须等待其他线程读取。
+
+#### LinkedBlockingDeque
+
+基于链表实现的双向阻塞队列。
+
+#### LinkedTransferQueue
+
+transfer方法将元素防止队列尾部，并且在没有被移除时，产生该元素数据的线程一直处于阻塞状态。
