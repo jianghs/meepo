@@ -95,3 +95,85 @@
 #### LinkedTransferQueue
 
 transfer方法将元素防止队列尾部，并且在没有被移除时，产生该元素数据的线程一直处于阻塞状态。
+
+### ConcurrentQueue（并发队列）
+
+无锁（Lock Free）依赖CPU底层技术实现。
+
+#### ConcurrentLinkedQueue
+
+无锁的、线程安全的、性能高效的、基于链表结构实现的FIFO单向队列。
+
+#### ConcurrentLinkedDeque
+
+无锁的、线程安全的、性能高效的、基于链表结构实现的FIFO双向队列。
+
+### ConcurrentMap（并发映射）
+
+#### ConcurrentHashMap
+1. 1.8之前采用分段锁
+    
+    每个分段锁对象可同步若干桶。默认由16个锁对象组成。
+
+1. 1.8及1.8以后采用数组+单向链表+红黑树，利用CAS+Synchronized保证安全性。
+
+#### ConcurrentSkipListMap（基于跳表）
+
+### 写时拷贝算法（CopyOnWrite）
+
+所有线程读取数据时不会对数据加锁。写时才会加锁，然后将最新的数据复制一份，基于最新的复制数据进行写操作，最后将引用指向最新的数据集合。
+
+数组复制会带来开销。
+
+不能保证实时一致，只能保证最终一致。
+
+适用场景：读远大于写。
+
+#### CopyOnWriteArrayList
+
+#### CopyOnWriteArraySet
+
+### 线程池
+
+#### ThreadPoolExecutor
+
+1. corePoolSize：线程池中的核心线程数量，即使处于空闲，数量也不会减少。
+1. maximumPoolSize：线程池允许的最大线程数量。
+1. keepAliveTime：线程池中超过核心线程数且处于空闲状态的线程存活的时间。
+1. TimeUnit：单位
+1. BlockingQueue：存放已提交至线程池但未被执行的任务。
+1. ThreadFactory：线程工厂，可以自定义线程名、优先级等信息
+1. 拒绝策略：任务数量超过阻塞对列时的拒绝策略
+    1. Discard丢弃
+    1. Abort中止
+    1. DiscardOldest丢弃最老
+    1. CallerRuns调用者线程执行策略
+
+线程池创建后，内部运行的线程只有第一次执行时才会被创建。
+
+1. shutdown:等正在执行的线程和阻塞队列中的线程执行完成后关闭。新提交的任务会被拒绝。可以结合线程池awaitTermination等待线程池关闭后的下一步动作。
+1. shutdownNow:立即关闭
+1. 二者结合
+#### ScheduledThreadPoolExecutor
+
+可以实现定时任务。
+
+#### Executors
+
+1. newCachedThreadPool创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。
+1. newFixedThreadPool 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。
+1. newScheduledThreadPool 创建一个定长线程池，支持定时及周期性任务执行。
+1. newSingleThreadExecutor 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。
+
+阻塞队列默认时无边界的，资源有限的情况下，容易引起OOM
+
+### Fork/Join
+
+将一个复杂的任务拆分（Fork）成若干个并行执行，然后将结果合并（Join）
+
+#### ForkJoinPool
+
+#### ForkJoinTask
+
+1. RecursiveTask:返回计算结果
+1. RecursiveAction:不会返回计算结果
